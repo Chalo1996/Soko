@@ -33,13 +33,15 @@ class BaseModel:
 
     def __init__(self, **kwargs):
         """Instantiates a new model"""
-        self.id = str(uuid4())
+        self.id = uuid4().hex
         self.created_at = datetime.now()
         self.updated_at = datetime.now()
         if kwargs:
             for key, value in kwargs.items():
-                if key not in ['__class__', 'created_at', 'updated_at']:
-                    setattr(key, value, self)
+                if hasattr(self.__class__, key) and \
+                   key not in ["id", "created_at",
+                               "updated_at"]:
+                    setattr(self, key, value)
 
     def __str__(self):
         """ String representation method
@@ -70,13 +72,23 @@ class BaseModel:
                     instance
         """
         my_dict = self.__dict__.copy()
-        my_dict["__class__"] = self.__class__.__name__
         my_dict["created_at"] = self.created_at.isoformat()
         my_dict["updated_at"] = self.updated_at.isoformat()
 
+        # Card expiring date
+        if my_dict.get("expiry_date"):
+            my_dict.update({"expiry_date": my_dict.get(
+                           "expiry_date").isofomart()})
+
+        # remove password and salt from dictionary
+        # representation if they exist
+        if my_dict.get("password"):
+            my_dict.pop("password")
+        if my_dict.get("salt"):
+            my_dict.pop("salt")
+
         # delete _sa_instance_state from dictionary
-        if '_sa_instance_state' in my_dict.keys():
-            del my_dict['_sa_instance_state']
+        my_dict.pop("_sa_instance_state")
         return my_dict
 
     def delete(self):
