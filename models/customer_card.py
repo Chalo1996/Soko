@@ -24,8 +24,8 @@ class CustomerCard(BaseModel, Base):
 
     customer_id = Column(String(60), ForeignKey("customers.id"),
                          nullable=False)
-    card_number = Column(String(60), nullable=False)
-    cvv = Column(String(60), nullable=False)
+    card_number = Column(String(20), nullable=False)
+    cvv = Column(String(10), nullable=False)
     expiry_date = Column(Date, nullable=False)
     name_on_card = Column(String(128), nullable=False)
     card_type = Column(String(60), nullable=False)
@@ -33,9 +33,9 @@ class CustomerCard(BaseModel, Base):
     def __init__(self, **kwargs):
         """Instantiates a CustomerCard object"""
         # Create date object for expiry date
-        expiry_date = kwargs.get("expiry_date")
-        month = expiry_date.get("month")
-        year = expiry_date.get("year")
+        expiry_date = kwargs.get("expiry_date").split("/")
+        month = int(expiry_date[0])
+        year = int(expiry_date[1])
         expiry_date = date(year, month, 1)
 
         # Check card type

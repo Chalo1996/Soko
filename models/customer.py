@@ -6,7 +6,7 @@
 from flask_login import UserMixin
 from hashlib import sha256
 from models.base_model import Base, BaseModel
-from sqlalchemy import Column, String
+from sqlalchemy import Boolean, Column, String
 from sqlalchemy.orm import relationship
 from uuid import uuid4
 
@@ -21,6 +21,7 @@ class Customer(BaseModel, Base, UserMixin):
             email (str): customer's email address
             password (str): customer's hashed password
             salt (str): salt used to hash password
+            confirmed(str): confirmation status
             card: relationship with cards table
             cart: relationship with cart table
             notifications: relationship with customer_notifications table
@@ -36,9 +37,10 @@ class Customer(BaseModel, Base, UserMixin):
     email = Column(String(128), nullable=False, unique=True)
     password = Column(String(128), nullable=False)
     salt = Column(String(60))
-    card = relationship('CustomerCard',
-                        backref="customer",
-                        cascade="all,delete")
+    confirmed = Column(Boolean, default=False, nullable=False)
+    cards = relationship('CustomerCard',
+                         backref="customer",
+                         cascade="all,delete")
     cart = relationship("Cart",
                         backref="customer",
                         cascade="all,delete")
@@ -48,9 +50,9 @@ class Customer(BaseModel, Base, UserMixin):
     saved_items = relationship("SavedItem",
                                backref="customer",
                                cascade="all,delete")
-    shipping_addresses = relationship("ShippingAddress",
-                                      backref="customer",
-                                      cascade="all,delete")
+    addresses = relationship("ShippingAddress",
+                             backref="customer",
+                             cascade="all,delete")
 
     def __init__(self, **kwargs):
         """Instantiates the Customer object."""
