@@ -1,0 +1,394 @@
+{% extends "base.html" %}
+
+<!-- prettier-ignore -->
+{% block styles %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='styles/index.css') + '?' + cache_id }}"
+/>
+{% endblock %}
+
+<!-- prettier-ignore -->
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.5.0.js" defer></script>
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.4/socket.io.js"
+  integrity="sha512-YeeA/Qxn5hYdkukScTCNNOhTrv1C2RubAGButJ1rmgQwZf/HdRaCGl+JAVkqsqaNRaYNHdheiuKKuPf9mDcqKg=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+  defer
+></script>
+<script
+  type="text/javascript"
+  src="{{ url_for('static', filename='scripts/index.js') + '?' + cache_id}}"
+  defer
+></script>
+{%endblock %}
+
+<!-- prettier-ignore -->
+{% block body%}
+<header>
+  <section class="logo container">
+    <img
+      src="{{ url_for('static', filename='images/site/favicon-big.svg') }}"
+      alt="favicon"
+      id="favicon"
+    />
+    <img
+      src="{{ url_for('static', filename='images/site/logo-big.svg') }}"
+      alt="logo"
+      id="logo"
+    />
+  </section>
+  <div id="seperator"></div>
+  <section class="header-nav container flex-row">
+    <div class="product-nav flex-row">
+      <span class="hamburger">&#9776; </span>
+      <span>Categories</span>
+      <nav class="categories">
+        <a>
+          <img
+            src="{{ url_for('static', filename='images/categories/supermarket.svg') }}"
+            alt="supermarket"
+          />
+          SUPERMARKET
+        </a>
+        <ul class="subcategories"></ul>
+        <a>
+          <img
+            src="{{ url_for('static', filename='images/categories/healthcare-beauty.svg') }}"
+            alt="healthcare-beauty"
+          />
+          HEALTHCARE AND BEAUTY
+        </a>
+        <ul class="subcategories"></ul>
+        <a>
+          <img
+            src="{{ url_for('static', filename='images/categories/home-office.svg') }}"
+            alt="home-office"
+          />
+          HOME AND OFFICE
+        </a>
+        <ul class="subcategories"></ul>
+        <a>
+          <img
+            src="{{ url_for('static', filename='images/categories/home-appliances.svg') }}"
+            alt="home-appliances"
+          />
+          HOME APPLIANCES
+        </a>
+        <ul class="subcategories"></ul>
+        <a>
+          <img
+            src="{{ url_for('static', filename='images/categories/mobile-tablets.svg') }}"
+            alt="mobile-tablets"
+          />
+          PHONES AND TABLETS
+        </a>
+        <ul class="subcategories"></ul>
+        <a>
+          <img
+            src="{{ url_for('static', filename='images/categories/laptops.svg') }}"
+            alt="laptops"
+          />
+          COMPUTING
+        </a>
+        <ul class="subcategories"></ul>
+        <a>
+          <img
+            src="{{ url_for('static', filename='images/categories/tv-audio.svg') }}"
+            alt="tv-audio"
+          />
+          TV &#38; AUDIO
+        </a>
+        <ul class="subcategories"></ul>
+        <a>
+          <img
+            src="{{ url_for('static', filename='images/categories/gaming.svg') }}"
+            alt="gaming"
+          />
+          GAMING
+        </a>
+        <ul class="subcategories"></ul>
+        <a>
+          <img
+            src="{{ url_for('static', filename='images/categories/fashion.svg') }}"
+            alt="fashion"
+          />
+          FASHION
+        </a>
+        <ul class="subcategories"></ul>
+        <a>
+          <img
+            src="{{ url_for('static', filename='images/categories/baby-products.svg') }}"
+            alt="baby-products"
+          />
+          BABY PRODUCTS AND TOYS
+        </a>
+        <ul class="subcategories"></ul>
+      </nav>
+    </div>
+    <!-- Search bar -->
+    <div class="search-div">
+      <input
+        type="text"
+        name="search"
+        class="search"
+        placeholder="Search products"
+      />
+      <button class="search">SEARCH</button>
+    </div>
+    <!-- Navigation icons -->
+    <nav class="nav-icons flex-row">
+      <div class="user">
+        <span id="user-name">Hello, Anastacia</span>
+        <div class="user-icon">
+          <i class="fa-regular fa-user fa-lg icon"></i>
+          <!-- Profile menu -->
+          <div class="profile-menu">
+            <ul>
+              <li>
+                <i class="fa-regular fa-user fa-lg"></i>
+                <a href="#"> Profile</a>
+              </li>
+              <li>
+                <img
+                  src="{{ url_for('static', filename='images/icons/24/wishlist-black.svg') }}"
+                  alt="wishlist-black"
+                />
+                <a href="#"> Orders</a>
+              </li>
+              <li>
+                <img
+                  src="{{ url_for('static', filename='images/icons/24/heart-black.svg') }}"
+                  alt="heart"
+                />
+                <a href="#"> Saved Items</a>
+              </li>
+              <li>
+                <img
+                  src="{{ url_for('static', filename='images/icons/24/logout-black.svg') }}"
+                  alt="wishlist-black"
+                />
+                <a href="#"> Log Out</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <i class="fa-regular fa-bell fa-lg icon"></i>
+      <!-- Notification menu -->
+      <div class="notification-menu">
+        <div class="notification-options flex-row">
+          <a href="javascript:void(0)">Mark all as read</a>
+          <a href="#">View all</a>
+        </div>
+      </div>
+      <!-- Cart sections -->
+      <i class="fa-solid fa-cart-shopping fa-lg icon"></i>
+    </nav>
+    <aside class="slide-cart">
+      <div class="cart-num">"Cart(1)"</div>
+      <div class="cart-item">
+        <img src="" alt="product" />
+      </div>
+    </aside>
+  </section>
+</header>
+
+{% block main %}
+<!--Product Content -->
+<main class="content container">
+  <section class="banner">
+    <div class="banner">
+      <div class="slide fade">
+        <img
+          src="{{ url_for('static', filename='images/site/christmas-banner.jpg') }}"
+          alt="christmas-ad"
+        />
+      </div>
+      <div class="slide fade">
+        <img
+          src="{{ url_for('static', filename='images/site/new-year-banner.jpg') }}"
+          alt="new-year-ad"
+        />
+      </div>
+      <div class="slide fade">
+        <img
+          src="{{ url_for('static', filename='images/site/back-to-school-banner.jpg') }}"
+          alt="back-to-school-ad"
+        />
+      </div>
+      <a class="prev">&#10094;</a>
+      <a class="next">&#10095;</a>
+    </div>
+    <div class="flex-row shop-now-div">
+      <a href="#prod"><button id="shop-now">SHOP NOW</button></a>
+    </div>
+    <div class="thumbnails">
+      <span class="banner-nav" slide-idx="0"></span>
+      <span class="banner-nav" slide-idx="1"></span>
+      <span class="banner-nav" slide-idx="2"></span>
+    </div>
+  </section>
+  <section class="products">
+    <h1>Christmas Deals</h1>
+    <div class="landing-category flex-row">
+      <article class="product" data-id="" data-name="">
+        <img
+          src="{{ url_for('static', filename='images/site/macbook.jpeg') }}"
+          alt="product"
+        />
+        <h3>MacBook Pro</h3>
+        <p>$1299.99</p>
+      </article>
+      <article class="product" data-id="" data-name="">
+        <img
+          src="{{ url_for('static', filename='images/site/macbook.jpeg') }}"
+          alt="product"
+        />
+        <h3>MacBook Pro</h3>
+        <p>$1299.99</p>
+      </article>
+      <article class="product" data-id="" data-name="">
+        <img
+          src="{{ url_for('static', filename='images/site/macbook.jpeg') }}"
+          alt="product"
+        />
+        <h3>MacBook Pro</h3>
+        <p>$1299.99</p>
+      </article>
+      <article class="product" data-id="" data-name="">
+        <img
+          src="{{ url_for('static', filename='images/site/macbook.jpeg') }}"
+          alt="product"
+        />
+        <h3>MacBook Pro</h3>
+        <p>$1299.99</p>
+      </article>
+      <article class="product" data-id="" data-name="">
+        <img
+          src="{{ url_for('static', filename='images/site/macbook.jpeg') }}"
+          alt="product"
+        />
+        <h3>MacBook Pro</h3>
+        <p>$1299.99</p>
+      </article>
+    </div>
+    <h1>Trending</h1>
+    <div class="landing-category flex-row">
+      <article class="product" data-id="" data-name="">
+        <img
+          src="{{ url_for('static', filename='images/site/macbook.jpeg') }}"
+          alt="product"
+        />
+        <h3>MacBook Pro</h3>
+        <p>$1299.99</p>
+      </article>
+      <article class="product" data-id="" data-name="">
+        <img
+          src="{{ url_for('static', filename='images/site/macbook.jpeg') }}"
+          alt="product"
+        />
+        <h3>MacBook Pro</h3>
+        <p>$1299.99</p>
+      </article>
+      <article class="product" data-id="" data-name="">
+        <img
+          src="{{ url_for('static', filename='images/site/macbook.jpeg') }}"
+          alt="product"
+        />
+        <h3>MacBook Pro</h3>
+        <p>$1299.99</p>
+      </article>
+      <article class="product" data-id="" data-name="">
+        <img
+          src="{{ url_for('static', filename='images/site/macbook.jpeg') }}"
+          alt="product"
+        />
+        <h3>MacBook Pro</h3>
+        <p>$1299.99</p>
+      </article>
+    </div>
+    <h1>Fashion</h1>
+    <div class="landing-category flex-row">
+      <article class="product" data-id="" data-name="">
+        <img
+          src="{{ url_for('static', filename='images/site/macbook.jpeg') }}"
+          alt="product"
+        />
+        <h3>MacBook Pro</h3>
+        <p>$1299.99</p>
+      </article>
+      <article class="product" data-id="" data-name="">
+        <img
+          src="{{ url_for('static', filename='images/site/macbook.jpeg') }}"
+          alt="product"
+        />
+        <h3>MacBook Pro</h3>
+        <p>$1299.99</p>
+      </article>
+      <article class="product" data-id="" data-name="">
+        <img
+          src="{{ url_for('static', filename='images/site/macbook.jpeg') }}"
+          alt="product"
+        />
+        <h3>MacBook Pro</h3>
+        <p>$1299.99</p>
+      </article>
+    </div>
+    <h1>On a budget</h1>
+    <div class="landing-category flex-row">
+      <article class="product" data-id="" data-name="">
+        <img
+          src="{{ url_for('static', filename='images/site/macbook.jpeg') }}"
+          alt="product"
+        />
+        <h3>MacBook Pro</h3>
+        <p>$1299.99</p>
+      </article>
+      <article class="product" data-id="" data-name="">
+        <img
+          src="{{ url_for('static', filename='images/site/macbook.jpeg') }}"
+          alt="product"
+        />
+        <h3>MacBook Pro</h3>
+        <p>$1299.99</p>
+      </article>
+      <article class="product" data-id="" data-name="">
+        <img
+          src="{{ url_for('static', filename='images/site/macbook.jpeg') }}"
+          alt="product"
+        />
+        <h3>MacBook Pro</h3>
+        <p>$1299.99</p>
+      </article>
+    </div>
+  </section>
+</main>
+{% endblock %}
+<!-- Footer sections -->
+<footer>
+  <section class="footer-nav container flex-row">
+    <div class="socials flex-row">
+      Stay in touch with us
+      <i class="fa-brands fa-twitter fa-lg footer-icon"></i>
+      <i class="fa-brands fa-instagram fa-lg footer-icon"></i>
+      <i class="fa-brands fa-facebook fa-lg footer-icon"></i>
+    </div>
+    <nav class="nav flex-row">
+      <a href="#">ABOUT US</a>
+      <a href="#">CONTACT US</a>
+      <a href="#">SELL ON SOKO</a>
+      <a href="#">FAQ</a>
+    </nav>
+    <div class="messanger">
+      <div class="message-header flex-row">
+        <i class="fa-regular fa-message fa-lg"> <span>Messages</span></i>
+        <i class="fa-solid fa-chevron-up arrow"></i>
+      </div>
+      <div class="chats"></div>
+    </div>
+  </section>
+</footer>
+{% endblock %}
