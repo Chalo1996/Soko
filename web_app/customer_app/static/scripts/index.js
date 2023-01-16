@@ -1,4 +1,70 @@
+//  SCRIPT FOR:
+// 1. Banner animation
+// 2. Categories menu
+// 3. Navigation functions including showing side cart
+// 4. Shop now button
 $("document").ready(function () {
+  // Adjust zoom level depending on the screen size
+  document.body.style.zoom = $(window).innerHeight() / $(window).outerHeight();
+
+  // START OF CATEGORIES MENU
+  $(".product-nav").hover(function () {
+    $(".categories a").removeClass("color-on-hover");
+    $(".subcategories-container").html(
+      $(".categories").children("a:first-child + .subcategories").html()
+    );
+    $(".categories").children("a:first-child").addClass("color-on-hover");
+  });
+  $(".categories a").hover(function () {
+    $(this).siblings("a").removeClass("color-on-hover");
+    $(this).addClass("color-on-hover");
+    $(".subcategories-container").html($(this).next(".subcategories").html());
+  });
+  // END OF CATEGORIES MENU
+
+  // START OF NAVIGATION ICONS
+  // Notification menu
+  $(".notification-icon").click(function () {
+    $(".profile-icon").removeClass("color-on-hover");
+    $(".fa-cart-shopping").removeClass("color-on-hover");
+    $(".profile-menu").hide();
+    $(".slide-cart").removeClass("slide-cart-width");
+    $(this).toggleClass("color-on-hover");
+    $(".notification-menu").toggle();
+  });
+
+  // Profile menu
+  $(".profile-icon").click(function () {
+    $(".notification-icon").removeClass("color-on-hover");
+    $(".fa-cart-shopping").removeClass("color-on-hover");
+    $(".notification-menu").hide();
+    $(".slide-cart").removeClass("slide-cart-width");
+    $(this).toggleClass("color-on-hover");
+    $(".profile-menu").toggle();
+  });
+
+  // Slide-cart
+  $(".fa-cart-shopping").click(function () {
+    $(".notification-icon").removeClass("color-on-hover");
+    $(".profile-icon").removeClass("color-on-hover");
+    $(".notification-menu").hide();
+    $(".profile-menu").hide();
+    $(this).toggleClass("color-on-hover");
+    $(".slide-cart").toggleClass("slide-cart-width");
+    $(".slide-cart").height($(window).outerHeight() - 139);
+  });
+
+  $(window).on("zoom", function () {
+    $(".slide-cart").height($(window).outerHeight() - 139);
+  });
+
+  $(".close-cart").click(function () {
+    $(".slide-cart").toggleClass("slide-cart-width");
+    $(".fa-cart-shopping").toggleClass("color-on-hover");
+  });
+  // END OF NAVIGATION ICONS
+
+  $(window).stop(true, true);
   // START OF BANNER ANIMATION
   let slideIndex = 0;
   let timer;
@@ -33,7 +99,7 @@ $("document").ready(function () {
     }, 5000);
   }
 
-  //   Assigned fuctions for click events
+  //   Assigned functions for click events
   $(".next").click(() => nextSlide(1));
   $(".prev").click(() => nextSlide(-1));
   $(".banner-nav").click(function () {
@@ -42,148 +108,30 @@ $("document").ready(function () {
   });
   // END OF BANNER ANIMATION
 
-  // START OF CART
-  const itemsOnCart = $(".cart-num");
-  const subtotalElement = $(".cart-subtotal");
-  // Subtotal calculation
-  function calculateSubtotal() {
-    // let subtotal = parseFloat(subtotalElement.val.slice(1));
-    let subtotal = 0;
-    const cartItems = $(".cart-item");
-    itemsOnCart.text(`Cart(${cartItems.length})`);
-    cartItems.each(function () {
-      const price = parseFloat($(this).children(".price").text().slice(1));
-      const quantity = parseInt(
-        $(this).children(".add-subtract").children(".quantity").val()
-      );
-      subtotal += price * quantity;
-    });
-    subtotalElement.text(`$${subtotal.toFixed(2)}`);
-  }
-  calculateSubtotal();
-
-  // Add or subtract quantity of cart item
-  function addOrSubtract(item, operation) {
-    if (operation === "add") {
-      item.val(parseInt(item.val()) + 1);
-    }
-    if (operation === "subtract" && parseInt(item.val()) > 1) {
-      item.val(parseInt(item.val()) - 1);
-    }
-    calculateSubtotal();
-  }
-  $(".add").click(function () {
-    addOrSubtract($(this).prev(), "add");
+  // START OF SHOP NOW BUTTON
+  $("#shop-now").click(() => {
+    $(window).scrollTop(410);
   });
-  $(".subtract").click(function () {
-    addOrSubtract($(this).next(), "subtract");
-  });
+  // END OF SHOP NOW BUTTON
 
-  // Delete cart-item
-  $(".delete-item").click(function () {
-    $(this).parent().remove();
-    calculateSubtotal();
-    if ($(".cart-item").length === 0) {
-      $(".subtotal, .disclaimer").hide();
-      $(".checkout").prop("disabled", true);
-    }
+  // START OF SEARCH BUTTON
+  $("button.search").click(function (event) {
+    if ($(this).prev("input").val() === "") return;
+    let params = new URLSearchParams();
+    params.append("q", $("input.search").val());
+    location.href = "/search?" + params.toString();
   });
-  // END OF CART
-
-  // START OF MESSANGER
-  // Socket integration to be done
-  // Opening and closing chat section
-  const toggleArrow = $(".arrow");
-  const chatHistory = $(".chat-history");
-  const chatList = $(".chats");
-  let toggleSection = chatList;
-  let headerContent = $(".message-header .fa-message");
-  let tempContent;
-  toggleArrow.click(function () {
-    $(this).toggleClass("fa-angles-up fa-angles-down");
-    $(".messanger").toggleClass("messanger-size");
-    $(".message-header").toggleClass("message-header-properties");
-    toggleSection.toggle();
-    if (toggleSection.hasClass("chat-active")) {
-      $(".back-to-chat-list").click(() => goBack());
-      $(".back-to-chat-list").toggle();
-    }
-  });
-
-  // Loading messages
-  const chat = $(".chat");
-  chat.click(function (event) {
-    event.stopPropagation();
-    toggleSection.hide();
-    toggleSection = $(".chat-active");
-    toggleSection.show();
-    chatHistory.scrollTop(chatHistory.prop("scrollHeight"));
-    tempContent = $(
-      `<div class="chat-active-header"><span class="back-to-chat-list">&#10094;</span><span class="seller-name">  ${$(
-        this
-      )
-        .children(".seller-name")
-        .text()} </span></div>`
+  // END OF SEARCH BUTTON
+  // START OF NOTIFICATIONS
+  $("#notification-menu-mark-all-as-read").click(function () {
+    const notifications = $(".pop-up-notification-content");
+    const noNotifications = $(
+      "<span class='no-notifications'>No notifications</span>"
     );
-    $(".message-header .fa-message").replaceWith(tempContent);
-    headerContent = tempContent;
-    $(".back-to-chat-list").click(() => goBack());
+    notifications.animate({ left: "100%" }, 1000, function () {
+      $(this).remove();
+      $(".notification-menu").prepend(noNotifications);
+    });
   });
-
-  // Navigating back to chat list
-  function goBack() {
-    toggleSection.hide();
-    toggleSection = chatList;
-    toggleSection.show();
-    $(".chat-active-header").replaceWith(
-      $('<i class="fa-regular fa-message fa-lg"><span>Messages</span></i>')
-    );
-  }
-
-  // Sending message
-  const send = $(".fa-paper-plane");
-  send.click(function () {
-    const textArea = $("textarea#message");
-    if (textArea.val() === "") return;
-    let newMessage = $('<p class="customer-message"></p>');
-    if (
-      textArea.val().includes("http") &&
-      !textArea.val().includes("<script>")
-    ) {
-      // Add link as a tag
-    } else {
-      newMessage.text(textArea.val());
-    }
-    newMessage = $('<div class="customer-message-container"></div>').append(
-      newMessage
-    );
-    textArea.val("");
-    chatHistory.append(newMessage);
-    chatHistory.scrollTop(chatHistory.prop("scrollHeight"));
-  });
-
-  // Deleting entire chat
-  if (toggleSection.hasClass("chats")) {
-    // Click on ellipsis to show delete menu
-    $(".fa-ellipsis").click(function (event) {
-      event.stopPropagation();
-      const deletePrompt = $(this).parent().next(".delete");
-      deletePrompt.parent().siblings().children(".delete").hide();
-      deletePrompt.toggle();
-    });
-    // Delete message on click trash can
-    $(".delete .fa-trash-can").click(function (event) {
-      event.stopPropagation();
-      $(this).parent().toggle();
-      $(this).parent().parent().remove();
-    });
-    // Close delete pop-up on click anywhere
-    // on the messanger body except the pop-up
-    $(".messanger").click(() => {
-      if ($(".delete").is(":visible")) {
-        $(".delete").hide();
-      }
-    });
-  }
-  // END OF MESSANGER
+  // END OF NOTIFICATIONS
 });

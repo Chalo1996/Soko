@@ -1,1 +1,155 @@
-{% extends "index.html" %}
+{% extends "index.html" %} {% block styles %} {{ super() }}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='styles/about.css') + '?' + cache_id }}"
+/>
+{% endblock %} {% block header_nav %} {% endblock %} {% block main%} {# About
+section #}
+<h2>Soko - Shopping made convenient</h2>
+<p>
+  Soko is multi-shop online e-commerce platform for the best online shopping
+  experience. Our goals is to make online shopping an wholesome experience. Soko
+  is the one stop platform for all your shopping needs
+</p>
+<h2>Features</h2>
+<section class="features">
+  <img
+    src="{{ url_for('static', filename='images/landing_page/landing-page-carousel.png') }}"
+    alt="landing-page-carousel"
+  />
+  <p>Get the latest deals</p>
+  <img
+    src="{{ url_for('static', filename='images/landing_page/landing-page-products.png') }}"
+    alt="landing-page-products"
+  />
+  <p>Checkout products at friendly prices</p>
+  <img
+    src="{{ url_for('static', filename='images/landing_page/messenger-chat-list.png') }}"
+    alt="messenger-chat-list"
+  />
+  <p>Real-time communication with sellers</p>
+  <img
+    src="{{ url_for('static', filename='images/landing_page/messenger-messages.png') }}"
+    alt="messenger-messages"
+  />
+  <p>
+    Get all the latest update of new products directly from sellers. Negotiate
+    for friendly prices
+  </p>
+  <img
+    src="{{ url_for('static', filename='images/landing_page/cart.png') }}"
+    alt="cart"
+  />
+  <p>Add items to the your cart easily</p>
+  <img
+    src="{{ url_for('static', filename='images/landing_page/order-confirmed.png') }}"
+    alt="order-confirmed"
+  />
+  <p>Make an order and have it delivered within days</p>
+  <img
+    src="{{ url_for('static', filename='images/landing_page/notifications.png') }}"
+    alt="notifications"
+  />
+  <p>Get notified about your order fulfillment process and all amazing deals</p>
+</section>
+{# Team section #}
+<h2>About</h2>
+<section class="inspiration">
+  <p>
+    Online shopping has become a big part of our lives. It has broadened
+    commerce as people can buy products from anywhere at anytime. However, trade
+    is built on customer-seller interactions. Most online shopping platform lack
+    such interactivity features. Soko aims to solve this by providing real time
+    communication between customers and sellers. Customers can:
+  </p>
+  <ol>
+    <li>Make more informed decision when buying products</li>
+    <li>Track their oder fulfillment process</li>
+    <li>Get updated of new products and restocking of out of stock products</li>
+    <li>Gain more trust in the online shopping</li>
+  </ol>
+  <p>Soko also offers other features, including:"</p>
+  <ol>
+    <li>
+      An easily accessible shopping cart to resolve common cart abandonment
+      issues
+    </li>
+    <li>Instant checkout with the <strong>Buy Now</strong> option</li>
+    <li>
+      Updated order tracking through in-app and email notification-options
+    </li>
+    <li>Saving products for feature purchase</li>
+  </ol>
+  <p>
+    This project was inspired by the need to solve the above challenges of
+    contemporary online shopping platform. The code for this project can be
+    found on
+    <a
+      id="project-link"
+      href="https://github.com/ngugimuchangi/Soko"
+      target="_blank"
+      >GitHub</a
+    >.
+  </p>
+</section>
+<h2>Meet Our Team</h2>
+<section class="contributors flex-row">
+  <article class="contributor">
+    <div class="back-splash"></div>
+    <img
+      src="{{ url_for('static', filename='images/site/duncan.jpeg') }}"
+      alt="duncan"
+    />
+    <div class="contributor-socials flex-column">
+      <a href="https://github.com/ngugimuchangi" target="_blank"
+        ><i class="fa-brands fa-github fa-lg"></i
+      ></a>
+      <a href="https://twitter.com/ngugi_muchangi" target="_blank"
+        ><i class="fa-brands fa-twitter fa-lg"></i
+      ></a>
+      <a
+        href="https://www.linkedin.com/in/duncan-ngugi-a96396a9/"
+        target="_blank"
+        ><i class="fa-brands fa-linkedin fa-lg"></i
+      ></a>
+    </div>
+    <span class="contributor-name">Duncan Ngugi</span>
+  </article>
+
+  <article class="contributor">
+    <div class="back-splash"></div>
+    <img
+      src="{{ url_for('static', filename='images/site/chalo.jpeg') }}"
+      alt="chalo"
+    />
+    <div class="contributor-socials flex-column">
+      <a href="https://github.com/Chalo1996" target="_blank"
+        ><i class="fa-brands fa-github fa-lg"></i
+      ></a>
+      <a href="#" target="_blank"><i class="fa-brands fa-twitter fa-lg"></i></a>
+      <a href="#" target="_blank"
+        ><i class="fa-brands fa-linkedin fa-lg"></i
+      ></a>
+    </div>
+    <span class="contributor-name">Emmanuel Challo</span>
+  </article>
+
+  <article class="contributor">
+    <div class="back-splash"></div>
+    <img
+      src="{{ url_for('static', filename='images/site/dennis.jpeg') }}"
+      alt="dennis"
+    />
+    <div class="contributor-socials flex-column">
+      <a href="https://github.com/denkin14" target="_blank"
+        ><i class="fa-brands fa-github fa-lg"></i
+      ></a>
+      <a href="#" target="_blank"><i class="fa-brands fa-twitter fa-lg"></i></a>
+      <a href="#" target="_blank"
+        ><i class="fa-brands fa-linkedin fa-lg"></i
+      ></a>
+    </div>
+    <span class="contributor-name">Dennis Kinyua</span>
+  </article>
+</section>
+{% endblock %} {% block messenger %} {% endblock %}
